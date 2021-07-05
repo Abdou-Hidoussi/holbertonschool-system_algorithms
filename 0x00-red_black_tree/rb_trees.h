@@ -43,5 +43,8 @@ typedef struct rb_tree_s
 rb_tree_t *rb_tree_node(rb_tree_t *parent, int value, rb_color_t color);
 int rb_tree_is_valid(const rb_tree_t *tree);
 int check_tree(const rb_tree_t *tree);
+rb_tree_t *fix_right(rb_tree_t *old, int value, rb_color_t  color);
+rb_tree_t *fix_left(rb_tree_t *old, int value, rb_color_t  color);
+rb_tree_t *rb_tree_insert(rb_tree_t **tree, int value);
 
 #endif /* TREE_H */
