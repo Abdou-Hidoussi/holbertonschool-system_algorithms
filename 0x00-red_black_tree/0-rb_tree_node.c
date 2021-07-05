@@ -1,7 +1,9 @@
 #include "rb_trees.h"
 /**
- * main - Entry point
- *
+ * rb_tree_node - function that creates a Red-Black Tree node
+ * @parent: pointer to the parent
+ * @value: value
+ * @color: color
  * Return: Always 0 (Success)
  */
 rb_tree_t *rb_tree_node(rb_tree_t *parent, int value, rb_color_t color)
