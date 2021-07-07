@@ -1,119 +1,58 @@
 #include "rb_trees.h"
-
-rb_tree_t *left_unc(rb_tree_t **tree, rb_tree_t *leaf)
+rb_tree_t *fix_right(rb_tree_t *old, int value, rb_color_t  color)
 {
-	rb_tree_t *head, *unc = leaf->parent->parent->left;
-
-	if (unc && unc->color == RED)
-	{
-		leaf->parent->color = BLACK;
-		unc->color = BLACK;
-		head = leaf->parent->parent;
-		head->color = RED;
-		leaf = head;
-	}
-	else
-	{
-		if (leaf == leaf->parent->left)
-		{
-			leaf = leaf->parent;
-			rotate_right(tree, leaf);
-		}
-		leaf->parent->color = BLACK;
-		leaf->parent->parent->color = RED;
-		rotate_left(tree, leaf->parent->parent);
-	}
-	return (leaf);
+	old->parent->left = rb_tree_node(old->parent, value, color);
+	old->parent->left->n = old->parent->n;
+	old->parent->n = old->n;
+	old->n = value;
+	return (old);
 }
-
-
-rb_tree_t *right_unc(rb_tree_t **tree, rb_tree_t *leaf)
+rb_tree_t *fix_left(rb_tree_t *old, int value, rb_color_t  color)
 {
-	rb_tree_t *head, *unc = leaf->parent->parent->right;
-
-	if (unc && unc->color == RED)
-	{
-		leaf->parent->color = BLACK;
-		leaf->color = BLACK;
-		head = leaf->parent->parent;
-		head->color = RED;
-		leaf = head;
-	}
-	else
-	{
-		if (leaf == leaf->parent->right)
-		{
-			leaf = leaf->parent;
-			rotate_left(tree, leaf);
-		}
-		leaf->parent->color = BLACK;
-		leaf->parent->parent->color = RED;
-		rotate_right(tree, leaf->parent->parent);
-	}
-	return (leaf);
+	old->parent->right = rb_tree_node(old->parent, value, color);
+	old->parent->right->n = old->parent->n;
+	old->parent->n = old->n;
+	old->n = value;
+	return (old);
 }
-
-
-void recolor(rb_tree_t **tree, rb_tree_t *leaf)
-{
-    rb_tree_t *t = *tree;
-
-	while (leaf->parent && leaf->parent->color == RED)
-	{
-		if (leaf->parent->parent &&
-			leaf->parent == leaf->parent->parent->left)
-			leaf = right_unc(tree, leaf);
-		else
-			leaf = left_unc(tree, leaf);
-	}
-
-	t->color = BLACK;
-}
-
-
-rb_tree_t *add_leaf(rb_tree_t **tree, int value)
-{
-	rb_tree_t *this = *tree, *old, *new;
-
-	while (this)
-	{
-		old = this;
-
-		if (value < this->n)
-			this = this->left;
-		else if (value > this->n)
-			this = this->right;
-		else
-			return (NULL);
-	}
-
-	new = rb_tree_node(NULL, value, RED);
-	if (!new)
-		return (NULL);
-
-	new->parent = old;
-
-	if (!old)
-		*tree = new;
-	else if (new->n < old->n)
-		old->left = new;
-	else
-		old->right = new;
-
-	return (new);
-}
-
-
 rb_tree_t *rb_tree_insert(rb_tree_t **tree, int value)
 {
-	rb_tree_t *new;
+	rb_tree_t *old = *tree;
+	rb_color_t color;
 
-	if (!tree)
+	if (*tree == NULL)
+		return (*tree = rb_tree_node(NULL, value, BLACK));
+	if (old->color == RED)
+		color = BLACK;
+	else
+		color = RED;
+	if (old->n == value)
 		return (NULL);
 
-	new = add_leaf(tree, value);
-	if (new)
-		recolor(tree, new);
-
-	return (new);
+	if (old->n > value)
+	{
+		if (old->left == NULL)
+		{
+			if (old->parent)
+				if (old->parent->n > value && !old->parent->right
+				&& !old->left && !old->right)
+					return (fix_left(old, value, color));
+			return (old->left = rb_tree_node(old, value, color));
+		}
+		else
+			return (rb_tree_insert(&old->left, value));
+	}
+	else
+	{
+		if (old->right == NULL)
+		{
+			if (old->parent)
+				if (old->parent->n < value && !old->parent->left
+				&& !old->left && !old->right)
+					return (fix_right(old, value, color));
+			return (old->right = rb_tree_node(old, value, color));
+		}
+		else
+			return (rb_tree_insert(&old->right, value));
+	}
 }

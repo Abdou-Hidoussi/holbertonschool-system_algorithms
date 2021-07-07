@@ -44,12 +44,8 @@ rb_tree_t *rb_tree_node(rb_tree_t *parent, int value, rb_color_t color);
 int rb_tree_is_valid(const rb_tree_t *tree);
 int check_tree(const rb_tree_t *tree);
 
-void rotate_right(rb_tree_t **tree, rb_tree_t *node);
-void rotate_left(rb_tree_t **tree, rb_tree_t *node);
-rb_tree_t *left_unc(rb_tree_t **tree, rb_tree_t *leaf);
-rb_tree_t *right_unc(rb_tree_t **tree, rb_tree_t *leaf);
-void recolor(rb_tree_t **tree, rb_tree_t *leaf);
-rb_tree_t *add_leaf(rb_tree_t **tree, int value);
+rb_tree_t *fix_right(rb_tree_t *old, int value, rb_color_t  color);
+rb_tree_t *fix_left(rb_tree_t *old, int value, rb_color_t  color);
 rb_tree_t *rb_tree_insert(rb_tree_t **tree, int value);
 
 #endif /* TREE_H */
