@@ -1,56 +1,5 @@
 #include "rb_trees.h"
 
-
-void rotate_right(rb_tree_t **tree, rb_tree_t *node)
-{
-	rb_tree_t *leaf = node->left;
-
-	if (!leaf)
-		return;
-
-	node->left = leaf->right;
-
-	if (leaf->right)
-		leaf->right->parent = node;
-
-	leaf->parent = node->parent;
-
-	if (!node->parent)
-		*tree = leaf;
-	else if (node == node->parent->right)
-		node->parent->right = leaf;
-	else
-		node->parent->left = leaf;
-
-	leaf->right = node;
-	node->parent = leaf;
-}
-
-
-void rotate_left(rb_tree_t **tree, rb_tree_t *node)
-{
-	rb_tree_t *leaf = node->right;
-
-	if (!leaf)
-		return;
-	node->right = leaf->left;
-
-	if (leaf->left)
-		leaf->left->parent = node;
-
-	leaf->parent = node->parent;
-
-	if (!node->parent)
-		*tree = leaf;
-	else if (node == node->parent->left)
-		node->parent->left = leaf;
-	else
-		node->parent->right = leaf;
-
-	leaf->left = node;
-	node->parent = leaf;
-}
-
 rb_tree_t *left_unc(rb_tree_t **tree, rb_tree_t *leaf)
 {
 	rb_tree_t *head, *unc = leaf->parent->parent->left;
