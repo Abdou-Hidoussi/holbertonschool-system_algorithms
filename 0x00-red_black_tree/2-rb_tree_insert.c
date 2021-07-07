@@ -1,4 +1,5 @@
 #include "rb_trees.h"
+
 rb_tree_t *fix_right(rb_tree_t *old, int value, rb_color_t  color)
 {
 	old->parent->left = rb_tree_node(old->parent, value, color);
@@ -7,6 +8,7 @@ rb_tree_t *fix_right(rb_tree_t *old, int value, rb_color_t  color)
 	old->n = value;
 	return (old);
 }
+
 rb_tree_t *fix_left(rb_tree_t *old, int value, rb_color_t  color)
 {
 	old->parent->right = rb_tree_node(old->parent, value, color);
@@ -15,6 +17,7 @@ rb_tree_t *fix_left(rb_tree_t *old, int value, rb_color_t  color)
 	old->n = value;
 	return (old);
 }
+
 rb_tree_t *rb_tree_insert(rb_tree_t **tree, int value)
 {
 	rb_tree_t *old = *tree;
