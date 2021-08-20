@@ -44,23 +44,20 @@ vertex_t *graph_add_vertex(graph_t *graph, const char *str)
 		new->edges = NULL;
 		new->nb_edges = 0;
 		graph->nb_vertices++;
-	}
-	if (graph->vertices == NULL)
-	{
-		graph->vertices = new;
-		free(count);
-		return (new);
-	}
-	count = graph->vertices;
-	while (count != NULL)
-	{
-		if (count->next == NULL)
+		if (graph->vertices == NULL)
+			graph->vertices = new;
+		else
 		{
-			count->next = new;
-			break;
+			if (graph->vertices->next == NULL)
+				graph->vertices->next = new;
+			else
+			{
+				count = graph->vertices->next;
+				while (count->next != NULL)
+					count = count->next;
+				count->next = new;
+			}
 		}
-		count = count->next;
 	}
-	free(count);
 	return (new);
 }
