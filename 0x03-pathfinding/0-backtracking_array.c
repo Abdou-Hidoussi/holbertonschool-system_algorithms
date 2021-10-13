@@ -1,7 +1,7 @@
 #include "pathfinding.h"
 
 /**
- * add_point - creates a point and adds to a queue
+ * add_point - creates a point in queue
  * @queue: queue
  * @x: X coordinate
  * @y: Y coordinate
@@ -21,8 +21,7 @@ int add_point(queue_t **queue, int x, int y)
 }
 
 /**
- * backtracking_helper - backtracking helper function to find
- * a solution to a maze
+ * calculate - recursivly find the path
  * @queue: queue with points
  * @visited: visited array
  * @map: map or maze
@@ -33,7 +32,7 @@ int add_point(queue_t **queue, int x, int y)
  * @target: target point
  * Return: queue with points or NULL if failed
 */
-int backtracking_helper(queue_t **queue, int *visited, char **map, int rows,
+int calculate(queue_t **queue, int *visited, char **map, int rows,
 			int cols, int x, int y, point_t const *target)
 {
 	int arr[][2] = {RIGHT, BOTTOM, LEFT, TOP}, i;
@@ -48,7 +47,7 @@ int backtracking_helper(queue_t **queue, int *visited, char **map, int rows,
 	*(visited + y * cols + x) = 1;
 
 	for (i = 0; i < 4; ++i)
-		if (backtracking_helper(queue, visited, map, rows, cols,
+		if (calculate(queue, visited, map, rows, cols,
 					x + arr[i][0], y + arr[i][1], target))
 			return (add_point(queue, x, y));
 	return (0);
@@ -82,7 +81,7 @@ queue_t *backtracking_array(char **map, int rows, int cols,
 		free(visited);
 		return (NULL);
 	}
-	ret = backtracking_helper(&queue, visited, map, rows, cols,
+	ret = calculate(&queue, visited, map, rows, cols,
 				  start->x, start->y, target);
 	if (!ret)
 	{
