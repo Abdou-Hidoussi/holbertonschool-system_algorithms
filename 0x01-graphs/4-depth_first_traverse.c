@@ -22,7 +22,7 @@ void depth_first(vertex_t *v, int *visited,
 		*max_depth = depth;
 	++depth;
 	for (e = v->edges; e; e = e->next)
-		dfs(e->dest, visited, action, depth, max_depth);
+		depth_first(e->dest, visited, action, depth, max_depth);
 }
 
 /**
