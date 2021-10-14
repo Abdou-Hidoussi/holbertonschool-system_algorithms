@@ -1,7 +1,7 @@
 #include "graphs.h"
 
 /**
- * depth-first - depth-first
+ * depth_first - depth-first
  * @v: pointer vertex node being visited
  * @visited: array specifying if vertex has been visited
  * @action: function pointer to be called for each visited vertex
