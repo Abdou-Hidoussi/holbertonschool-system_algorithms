@@ -1,27 +1,36 @@
 #include "graphs.h"
 #include <string.h>
 /**
-*_strcpy - 0
-*@src: src
-*@dest: dest
-*Return: dest
-*/
-char *_strcpy(char *dest, char const *src)
+ * init - initialisevortex
+ * @graph: graph to update
+ * @str: string to store in new vertex
+ * @cur: last vertex
+ * @new: newly made vertex
+ * Return: pointer to newly made vertex or NULL
+ */
+vertex_t *init(graph_t *graph, const char *str, vertex_t *cur, vertex_t *new)
 {
-	int i = 0, j;
-
-	while (src[i] != '\0')
+	++graph->nb_vertices;
+	if (!cur)
 	{
-		i++;
+		graph->vertices = new;
+		new->index = 0;
 	}
-
-	j = 0;
-	while (j <= i)
+	else
 	{
-		dest[j] = src[j];
-		j++;
+		cur->next = new;
+		new->index = cur->index + 1;
 	}
-	return (dest);
+	new->content = strdup(str);
+	if (!new->content)
+	{
+		free(new);
+		return (NULL);
+	}
+	new->nb_edges = 0;
+	new->edges = NULL;
+	new->next = NULL;
+	return (new);
 }
 /**
  * graph_add_vertex - adds a vertex to an existing graph
@@ -31,34 +40,20 @@ char *_strcpy(char *dest, char const *src)
  */
 vertex_t *graph_add_vertex(graph_t *graph, const char *str)
 {
-	vertex_t *new = malloc(sizeof(*new));
-	vertex_t *count = malloc(sizeof(*count));
-	char *name = malloc(sizeof(*str));
+	vertex_t *new, *cur;
 
-	_strcpy(name, str);
-	if (new)
+	if (!graph || !str)
+		return (NULL);
+	for (cur = graph->vertices; cur; cur = cur->next)
 	{
-		new->index = graph->nb_vertices;
-		new->content = name;
-		new->next = NULL;
-		new->edges = NULL;
-		new->nb_edges = 0;
-		graph->nb_vertices++;
-		if (graph->vertices == NULL)
-			graph->vertices = new;
-		else
-		{
-			if (graph->vertices->next == NULL)
-				graph->vertices->next = new;
-			else
-			{
-				count = graph->vertices->next;
-				while (count->next != NULL)
-					count = count->next;
-				count->next = new;
-			}
-		}
+		if (!strcmp(cur->content, str))
+			return (NULL);
+		if (!cur->next)
+			break;
 	}
-	free(count);
-	return (new);
+	new = malloc(sizeof(*new));
+	if (!new)
+		return (NULL);
+	else
+		return (init(graph, str, cur, new));
 }
